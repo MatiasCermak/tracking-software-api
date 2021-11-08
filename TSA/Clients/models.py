@@ -1,9 +1,12 @@
 from django.db import models
 
+# Soy un puto promastercrack
+
 
 class Client(models.Model):
     name = models.CharField(max_length=50)
     address = models.CharField(max_length=50)
+
 
 class Contact(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)

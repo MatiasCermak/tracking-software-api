@@ -63,3 +63,7 @@ env/
 
 #Ignore temp files in Modified
 Modified/
+
+#Ignore Databases
+data
+.sqlite3
