@@ -1,6 +1,6 @@
 from django.db import models
-from Users import User, Area
-from Clients import Client
+from Users.models import User, Area
+from Clients.models import Client
 
 
 class Project(models.Model):
@@ -35,7 +35,7 @@ class Ticket(models.Model):
     area = models.ForeignKey(Area, on_delete=models.SET_DEFAULT, default=0)
 
 
-class Ticket_Detail(models.Model):
+class TicketDetail(models.Model):
     description = models.CharField('Descripción', max_length=255)
     title = models.CharField('Título', max_length=100)
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, verbose_name='Ticket',
