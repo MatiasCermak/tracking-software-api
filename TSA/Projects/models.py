@@ -1,5 +1,5 @@
 from django.db import models
-from Users.models import User, Area
+from Users.models import User
 from Clients.models import Client
 
 
@@ -32,7 +32,7 @@ class Ticket(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name='Proyecto',
                                 default=0, related_name='tickets')
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    area = models.ForeignKey(Area, on_delete=models.SET_DEFAULT, default=0)
+    area = models.SmallIntegerField('Area', default=User.PROJECT_MANAGEMENT, choices=User.AREAS)
 
 
 class TicketDetail(models.Model):
