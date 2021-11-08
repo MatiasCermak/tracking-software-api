@@ -1,4 +1,6 @@
 from django.db import models
+from Users import User, Area
+from Clients import Client
 
 
 class Project(models.Model):
@@ -6,8 +8,8 @@ class Project(models.Model):
     software_name = models.CharField('Nombre de software', max_length=255)
     software_version = models.CharField('Versión de software', max_length=100)
     active = models.BooleanField('Estado', default=True)
-    # owner: Foreing Key - Usuario dueño del proyecto
-    # client: Foreing Key - Cliente que encargó el proyecto
+    owner = models.ForeignKey(User, on_delete=models.SET_DEFAULT, default=0)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
 
 
 class Ticket(models.Model):
@@ -29,8 +31,8 @@ class Ticket(models.Model):
     title = models.CharField('Título', max_length=100)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name='Proyecto',
                                 default=0, related_name='tickets')
-    # created_by/user: Foreing Key - Usuario que lo creó
-    # area: Foreing Key - Área a la que pertenece
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    area = models.ForeignKey(Area, on_delete=models.SET_DEFAULT, default=0)
 
 
 class Ticket_Detail(models.Model):
@@ -38,4 +40,4 @@ class Ticket_Detail(models.Model):
     title = models.CharField('Título', max_length=100)
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, verbose_name='Ticket',
                                default=0, related_name='details')
-    # user: Foreing Key - Usuario que lo creó
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
