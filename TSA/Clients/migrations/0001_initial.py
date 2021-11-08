@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Client',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('address', models.CharField(max_length=50)),
             ],
@@ -23,12 +24,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Contact',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('phone', models.CharField(max_length=15)),
                 ('mail', models.CharField(max_length=30)),
                 ('is_main_contact', models.BooleanField()),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Clients.client')),
+                ('client', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='Clients.client')),
             ],
         ),
     ]
