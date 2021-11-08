@@ -139,7 +139,7 @@ REST_FRAMEWORK = {
 }
 
 SWAGGER_SETTINGS = {
-   'SECURITY_DEFINITIONS': {
+    'SECURITY_DEFINITIONS': {
         'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
@@ -153,4 +153,4 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7)
 }
 
-##AUTH_USER_MODEL = 'Users.User'
+AUTH_USER_MODEL = 'Users.User'
