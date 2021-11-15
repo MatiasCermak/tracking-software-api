@@ -7,11 +7,26 @@ class UserRegisterSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'email', 'first_name', 'last_name', ]
+        fields = ['username', 'password', 'email',
+                  'first_name', 'last_name', "area"]
 
 
 class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'area']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', "area"]
+
+
+class UserChangeAttrSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name']
+
+
+class UserChangePasswordSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['password']
