@@ -5,12 +5,13 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import ProjectSerializer, TicketSerializer, TicketDetailSerializer
 from Users.api.serializers import UserSerializer
 from Users.models import User
-from Users.api.permissions import IsProjectManagerOrSalesCreate
+from .permissions import IsProjectManagerOrSalesCreate
 from Projects.models import Project
 
 
 class ProjectModelViewSet(ModelViewSet):
     serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
     permission_classes = [IsProjectManagerOrSalesCreate]
 
     def create(self, request, *args, **kwargs):

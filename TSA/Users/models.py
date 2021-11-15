@@ -26,5 +26,6 @@ class User(AbstractUser):
         'Area', default=PROJECT_MANAGEMENT, choices=AREAS)
     email = EmailField(unique=True)
     is_leader = BooleanField(default=False)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'password']
