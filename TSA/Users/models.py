@@ -23,8 +23,9 @@ class User(AbstractUser):
         (TESTING, "Testing"),
         (MAINTENANCE, "Maintenance"),
     )
-    area = models.SmallIntegerField('Area', default=PROJECT_MANAGEMENT, choices=AREAS)
+    area = models.SmallIntegerField(
+        'Area', default=PROJECT_MANAGEMENT, choices=AREAS)
     email = EmailField(unique=True)
     is_leader = BooleanField(default=False)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username', 'password']
