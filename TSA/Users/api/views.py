@@ -4,7 +4,8 @@ from rest_framework.viewsets import ModelViewSet
 import rest_framework.status as status
 from .serializers import UserRegisterSerializer, UserSerializer, UserChangeAttrSerializer, UserChangePasswordSerializer
 from Users.models import User
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from .permissions import IsProjectManager
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
 
 
@@ -12,6 +13,7 @@ class UserRegisterModelViewSet(ModelViewSet):
     serializer_class = UserRegisterSerializer
     queryset = User.objects.all()
     http_method_names = ['post']
+    permission_classes = [IsProjectManager, ]
 
     def create(self, request, *args, **kwargs):
         if request.user.area != User.PROJECT_MANAGEMENT:
