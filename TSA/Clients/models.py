@@ -1,7 +1,5 @@
 from django.db import models
 
-# Soy un puto promastercrack
-
 
 class Client(models.Model):
     name = models.CharField(max_length=50)

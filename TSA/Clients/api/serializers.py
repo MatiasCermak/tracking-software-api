@@ -10,6 +10,7 @@ class ContactSerializer(ModelSerializer):
 
 class ClientSerializer(ModelSerializer):
     contacts = ContactSerializer(many=True, read_only=True)
+
     class Meta:
         model = Client
-        fields = ['name', 'address', 'contacts']
+        fields = ['id', 'name', 'address', 'contacts']

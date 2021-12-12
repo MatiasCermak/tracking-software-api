@@ -18,7 +18,7 @@ from django.urls import path, include
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from Projects.api.router import router_proj
-from Clients.api.router import router_clients, router_contacts, router_contacts_by_client
+from Clients.api.router import router_clients, router_contacts
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -40,5 +40,5 @@ urlpatterns = [
     path('api/', include('Users.api.router')),
     path('api/', include(router_clients.urls)),
     path('api/', include(router_contacts.urls)),
-    path('api/', include(router_contacts_by_client.urls))
+
 ]
