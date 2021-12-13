@@ -1,13 +1,10 @@
 from rest_framework import response
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
-from rest_framework.views import exception_handler
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from Clients.models import Client
 from .serializers import ProjectSerializer, ProjectListSerializer, ProjectFilterListSerializer, TicketChangeAreaSerializer, TicketChangeStateSerializer, TicketModifySerializer, TicketSerializer, TicketDetailSerializer
-from Users.api.serializers import UserSerializer
 from Users.models import User
 from Users.api.permissions import IsProjectManager
 from Projects.models import Project, Ticket
@@ -170,8 +167,6 @@ class FilterProjectModelViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         filters = ProjectFilterListSerializer(data=self.request.data)
         projects = Project.objects.all()
-        # if filters.initial_data['owner'] == '' and filters.initial_data['client'] == '' and filters.initial_data['active'] == '':
-        #     return redirect(reverse('projects-list'))
         if filters.initial_data['owner'] != '':
             owner = User.get_or_none(pk=filters.initial_data['owner'])
             projects = projects.filter(owner=owner)
