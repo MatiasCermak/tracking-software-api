@@ -55,3 +55,20 @@ class ProjectTest(TestCase):
         self.assertEqual(response.status_code, 201)
         cnt = Project.objects.count()
         self.assertEqual(cnt, 1)
+
+
+    def test_list_filter_projects(self):
+        proyect = dict(code_name='RR_Elec',
+                        software_name='ElectroRecursos',
+                        software_version='1.0',
+                        active=True,
+                        owner=self.user1.id,
+                        client=self.client1.id)
+        self.browser.post(reverse('projects-list'),  proyect)
+        cnt = Project.objects.count()
+        self.assertEqual(cnt, 1)
+        filters = dict(owner='', active='', client='')
+        response = self.browser.post(reverse('filter_projects-list'), filters)
+        self.assertEqual(response.status_code, 200)
+
+

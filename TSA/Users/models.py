@@ -29,3 +29,9 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'password']
+
+    def get_or_none(**kwargs):
+        try:
+            return User.objects.get(**kwargs)
+        except User.DoesNotExist:
+            return None
