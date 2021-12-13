@@ -14,3 +14,5 @@ router_proj.register(prefix='tickets/state', basename='tickets/state',
                      viewset=TicketChangeStateViewSet)
 router_proj.register(prefix='tickets/details', basename='tickets/details',
                      viewset=TicketDetailModelViewSet)
+router_proj.register(prefix='projects_filter', basename='filter_projects',
+                     viewset=FilterProjectModelViewSet)
