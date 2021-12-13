@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
-from .views import ProjectModelViewSet, TicketModelViewSet, TicketChangeAreaViewSet, TicketChangeStateViewSet, TicketDetailModelViewSet
+from .views import ProjectModelViewSet, TicketModelViewSet, TicketChangeAreaViewSet, TicketChangeStateViewSet, TicketDetailModelViewSet, FilterProjectModelViewSet
 
 router_proj = DefaultRouter()
 
