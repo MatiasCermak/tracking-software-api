@@ -25,6 +25,13 @@ class UserChangeAttrSerializer(ModelSerializer):
         fields = ['username', 'first_name', 'last_name']
 
 
+class UserChangeAreaSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ["area"]
+
+
 class UserChangePasswordSerializer(ModelSerializer):
 
     class Meta:
