@@ -11,6 +11,8 @@ from django.urls import reverse
 from django.shortcuts import redirect
 
 
+
+
 class ProjectModelViewSet(ModelViewSet):
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
@@ -57,6 +59,104 @@ class ProjectModelViewSet(ModelViewSet):
         else:
             project_serializer.save()
             return Response(status=status.HTTP_200_OK, data=project_serializer.data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class FilterProjectModelViewSet(ModelViewSet):
