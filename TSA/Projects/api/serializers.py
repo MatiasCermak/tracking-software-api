@@ -13,7 +13,27 @@ class TicketSerializer(ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = ['state', 'description', 'title', 'project', 'created_by', 'area', 'details']
+        fields = ['state', 'description', 'title',
+                  'project', 'created_by', 'area', 'details']
+
+
+class TicketModifySerializer(ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ['description', 'title',
+                  'project', 'created_by']
+
+
+class TicketChangeStateSerializer(ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ['state']
+
+
+class TicketChangeAreaSerializer(ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ['area']
 
 
 class ProjectSerializer(ModelSerializer):
@@ -21,4 +41,5 @@ class ProjectSerializer(ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['code_name', 'software_name', 'software_version', 'active', 'owner', 'client', 'tickets']
+        fields = ['code_name', 'software_name', 'software_version',
+                  'active', 'owner', 'client', 'tickets']

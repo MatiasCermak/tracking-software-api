@@ -2,11 +2,12 @@ from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 import rest_framework.status as status
-from .serializers import UserRegisterSerializer, UserSerializer, UserChangeAttrSerializer, UserChangePasswordSerializer
+from .serializers import UserRegisterSerializer, UserSerializer, UserChangeAttrSerializer, UserChangePasswordSerializer, UserChangeAreaSerializer
 from Users.models import User
 from .permissions import IsProjectManager
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
+from rest_framework.decorators import action
 
 
 class UserRegisterModelViewSet(ModelViewSet):
@@ -37,6 +38,24 @@ class UserChangeAttrModelViewSet(ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         user = User.objects.get(pk=request.user.pk)
         serializer = UserChangeAttrSerializer(
+            user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        saved_user = serializer.save()
+        retSerializer = UserSerializer(saved_user)
+        return Response(status=status.HTTP_200_OK, data=retSerializer.data)
+
+
+class UserChangeAreaModelViewSet(ModelViewSet):
+    serializer_class = UserChangeAreaSerializer
+    queryset = []
+    permission_classes = [IsProjectManager, ]
+    http_method_names = ['patch']
+
+    def partial_update(self, request, pk=None):
+        user = User.objects.get(pk=pk)
+        if request.user.area != User.PROJECT_MANAGEMENT:
+            return Response(status=status.HTTP_401_UNAUTHORIZED, data={"error : No tienes permisos para cambiar el area a un usuario"})
+        serializer = UserChangeAreaSerializer(
             user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         saved_user = serializer.save()
