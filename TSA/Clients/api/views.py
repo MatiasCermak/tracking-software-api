@@ -2,7 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from Clients.models import Client, Contact
 from Clients.api.serializers import ClientSerializer, ContactSerializer
 from .permissions import IsSalesOnly
-
+from rest_framework.permissions import IsAuthenticated
 
 class ClientModelViewSet(ModelViewSet):
     serializer_class = ClientSerializer
