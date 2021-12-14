@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 import rest_framework.status as status
@@ -52,7 +53,7 @@ class UserChangeAreaModelViewSet(ModelViewSet):
     http_method_names = ['patch']
 
     def partial_update(self, request, pk=None):
-        user = User.objects.get(pk=pk)
+        user = get_object_or_404(User, pk=pk)
         if request.user.area != User.PROJECT_MANAGEMENT:
             return Response(status=status.HTTP_401_UNAUTHORIZED, data={"error : No tienes permisos para cambiar el area a un usuario"})
         serializer = UserChangeAreaSerializer(
