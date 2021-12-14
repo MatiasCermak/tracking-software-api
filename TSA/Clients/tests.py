@@ -82,6 +82,13 @@ class ClientTest(TestCase):
         response = self.browser.delete(reverse('clients-detail', args=[self.client_test1.id]))
         self.assertEqual(response.status_code, 204)
 
+    def test_unauthorized_client(self):
+        response = self.browser.post(reverse('token_obtain_pair'), {'email': 'pmb@pm.com', 'password': 'pmb12345'})
+        rj = json.loads(response.content)
+        self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(rj.get('access'))
+
+        response = self.browser.delete(reverse('clients-detail', args=[self.client_test2.id]))
+        self.assertEqual(response.status_code, 403)
 
 class ContactTest(TestCase):
     def setUp(self):
@@ -200,3 +207,10 @@ class ContactTest(TestCase):
         response = self.browser.delete(reverse('contacts-detail', args=[self.contact_test1.id]))
         self.assertEqual(response.status_code, 204)
 
+    def test_unauthorized_contact(self):
+        response = self.browser.post(reverse('token_obtain_pair'), {'email': 'pmb@pm.com', 'password': 'pmb12345'})
+        rj = json.loads(response.content)
+        self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(rj.get('access'))
+
+        response = self.browser.delete(reverse('clients-detail', args=[self.client_test2.id]))
+        self.assertEqual(response.status_code, 403)
