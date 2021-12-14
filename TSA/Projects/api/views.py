@@ -74,13 +74,22 @@ class TicketModelViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         user = User.objects.get(pk=request.user.pk)
         ticket_serializer = TicketSerializer(data=request.data)
-        ticket_serializer.is_valid(raise_exception=True)
-        if user.area != ticket_serializer.data["area"] and user.area != User.PROJECT_MANAGEMENT:
+        created_by = User.objects.get(pk=ticket_serializer.initial_data["created_by"])
+        if user.area != ticket_serializer.initial_data["area"] and user.area != User.PROJECT_MANAGEMENT:
             return Response(status=status.HTTP_403_FORBIDDEN,
                             data={"error : El usuario debe ser project manager o líder de área del área en la cual el ticket se va a crear."})
+        elif created_by != user:
+            return Response(status=status.HTTP_403_FORBIDDEN,
+                            data={"error : No puede crear tiquets a nombre de otro usuario"})
         else:
-            ticket_serializer.save()
-            return response(status=status.HTTP_201_CREATED, data=ticket_serializer.data)
+            new_ticket = Ticket.objects.create(state=ticket_serializer.initial_data["state"],
+                                             description=ticket_serializer.initial_data["description"],
+                                             title=ticket_serializer.initial_data["title"],
+                                             project=Project.objects.get(pk=ticket_serializer.initial_data["project"]),
+                                             created_by=user,
+                                             area=ticket_serializer.initial_data["area"])
+            new_ticket_serializer = TicketSerializer(new_ticket)
+            return Response(status=status.HTTP_201_CREATED, data=new_ticket_serializer.data)
 
     def partial_update(self, request, pk=None, *args, **kwargs):
         ticket = Ticket.objects.get(pk=pk)
@@ -137,7 +146,7 @@ class TicketChangeAreaViewSet(ModelViewSet):
 
 class TicketDetailModelViewSet(ModelViewSet):
     serializer_class = TicketDetailSerializer
-    permission_classes = [TicketModelViewsetPermissions]
+    permission_classes = [IsAuthenticated]
     http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):
@@ -152,7 +161,7 @@ class TicketDetailModelViewSet(ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND,  data={"error : El ticket referenciado por este detalle no fue encontrado"})
         if user.area != ticket.area and user.area != User.PROJECT_MANAGEMENT:
             return Response(status=status.HTTP_403_FORBIDDEN,
-                            data={"error : El usuario debe ser project manager o líder de área del área a la cual el detalle de ticket pertenece"})
+                            data={"error : El usuario debe ser project manager o estar en el área a la cual el detalle de ticket pertenece"})
         else:
             ticket_detail_serializer.save()
             return response(status=status.HTTP_200_OK, data=ticket_detail_serializer.data)
