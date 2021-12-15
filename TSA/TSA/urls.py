@@ -20,21 +20,23 @@ from drf_yasg import openapi
 from Projects.api.router import router_proj
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="TSA API - LAB 4 - UBP",
-      default_version='v1',
-      description="Test description",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@admin.api"),
-      license=openapi.License(name="BSD License"),
-   ),
-   public=True,
+    openapi.Info(
+        title="TSA API - LAB 4 - UBP",
+        default_version='v1',
+        description="Test description",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@admin.api"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
 )
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redocs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('docs/', schema_view.with_ui('swagger',
+         cache_timeout=0), name='schema-swagger-ui'),
+    path('redocs/', schema_view.with_ui('redoc',
+         cache_timeout=0), name='schema-redoc'),
     path('api/', include(router_proj.urls)),
     path('api/', include('Users.api.router')),
 ]

@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse
 import rest_framework
+from rest_framework import response
 
 from .models import User
 
@@ -18,19 +19,23 @@ class UserTest(TestCase):
                                           area=0,
                                           is_leader=False)
         self.client.save()
-        self.client = User.objects.create(username="user2",
-                                          email='user2@user2.com',
-                                          password=make_password("user123"),
-                                          is_staff=True,
-                                          is_active=True,
-                                          area=2,
-                                          is_leader=False)
-        self.client.save()
+        self.client2 = User.objects.create(username="user2",
+                                           email='user2@user2.com',
+                                           password=make_password("user123"),
+                                           is_staff=True,
+                                           is_active=True,
+                                           area=2,
+                                           is_leader=False)
+        self.client2.save()
         response = self.browser.post(
             reverse('token_obtain_pair'), {'email': 'pepe@pepe.com', 'password': 'pepe123'})
         rj = json.loads(response.content)
         self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(
             rj.get('access'))
+
+    def test_api_list_users(self):
+        response = self.browser.get(reverse("users-list"))
+        self.assertEqual(response.status_code, 200)
 
     def test_api_add_user(self):
         user = dict(username='tom',
@@ -66,7 +71,7 @@ class UserTest(TestCase):
         self.assertEqual(response.data['area'], 3)
 
 
-class UserNoPermissionTest(TestCase):
+class UserNotLeaderTest(TestCase):
     def setUp(self):
         self.browser = Client()
         self.client = User.objects.create(username="pepe",
@@ -123,3 +128,48 @@ class UserNoPermissionTest(TestCase):
             new_data), content_type="application/json")
         self.assertEqual(response.status_code, 403)
         self.assertEqual(User.objects.last().area, 2)
+
+    def test_change_leader_attr(self):
+        new_data = dict(is_leader=True)
+        response = self.browser.patch(reverse('changeleaderattr-detail', kwargs={'pk': User.objects.last().id}), json.dumps(
+            new_data), content_type="application/json")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(User.objects.last().is_leader, False)
+
+
+class UserLeaderTest(TestCase):
+    def setUp(self):
+        self.browser = Client()
+        self.user1 = User.objects.create(username="pmleader",
+                                         email="pml@pm.com",
+                                         password=make_password("pml12345"),
+                                         is_active=True,
+                                         area=User.PROJECT_MANAGEMENT,
+                                         is_leader=True)
+        self.user1.save()
+        self.user2 = User.objects.create(username="pmbase",
+                                         email="pmb@pm.com",
+                                         password=make_password("pmb12345"),
+                                         is_active=True,
+                                         area=User.PROJECT_MANAGEMENT,
+                                         is_leader=False)
+        self.user2.save()
+        self.user3 = User.objects.create(username="usersale",
+                                         email="sale@sale.com",
+                                         password=make_password("sale1234"),
+                                         is_active=True,
+                                         area=User.SALES,
+                                         is_leader=False)
+        self.user3.save()
+        response = self.browser.post(
+            reverse('token_obtain_pair'), {'email': 'pml@pm.com', 'password': 'pml12345'})
+        rj = json.loads(response.content)
+        self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(
+            rj.get('access'))
+
+    def test_change_leader_attr(self):
+        new_data = dict(is_leader=True)
+        response = self.browser.patch(reverse('changeleaderattr-detail', kwargs={'pk': User.objects.last().id}), json.dumps(
+            new_data), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(User.objects.last().is_leader, True)
