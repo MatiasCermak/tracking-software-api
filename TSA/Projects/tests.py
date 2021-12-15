@@ -36,6 +36,7 @@ class ProjectTest(TestCase):
                                           area=User.SALES,
                                           is_leader=False)
         self.user3.set_password('sale1234')
+
         self.user3.save()
         self.user4 = User.objects.create(username="userreq",
                                          email="req@req.com",
@@ -86,7 +87,8 @@ class ProjectTest(TestCase):
         self.ticketdetal1.save()
         response = self.browser.post('/api/auth/login/', {'email': 'pml@pm.com', 'password': 'pml12345'})
         rj = json.loads(response.content)
-        self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(rj.get('access'))
+        self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(
+            rj.get('access'))
 
     def test_create_project(self):
         cnt = Project.objects.count()
