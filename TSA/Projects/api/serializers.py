@@ -43,3 +43,15 @@ class ProjectSerializer(ModelSerializer):
         model = Project
         fields = ['code_name', 'software_name', 'software_version',
                   'active', 'owner', 'client', 'tickets']
+
+   
+class ProjectListSerializer(ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['code_name', 'software_name', 'software_version', 'active', 'owner', 'client']
+
+
+class ProjectFilterListSerializer(ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ['active', 'owner', 'client']
