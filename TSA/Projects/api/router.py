@@ -8,11 +8,11 @@ router_proj.register(prefix='projects', basename='projects',
                      viewset=ProjectModelViewSet)
 router_proj.register(prefix='tickets', basename='tickets',
                      viewset=TicketModelViewSet)
-router_proj.register(prefix='tickets/area', basename='tickets/area',
+router_proj.register(prefix='tickets_area', basename='tickets_area',
                      viewset=TicketChangeAreaViewSet)
-router_proj.register(prefix='tickets/state', basename='tickets/state',
+router_proj.register(prefix='tickets_state', basename='tickets_state',
                      viewset=TicketChangeStateViewSet)
-router_proj.register(prefix='tickets/details', basename='tickets/details',
+router_proj.register(prefix='tickets_details', basename='tickets_details',
                      viewset=TicketDetailModelViewSet)
 router_proj.register(prefix='projects_filter', basename='filter_projects',
                      viewset=FilterProjectModelViewSet)

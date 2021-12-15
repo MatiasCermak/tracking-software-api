@@ -21,7 +21,7 @@ class TicketModifySerializer(ModelSerializer):
     class Meta:
         model = Ticket
         fields = ['description', 'title',
-                  'project', 'created_by']
+                  'project']#Corrobrar que se pueda cambiar el proyecto
 
 
 class TicketChangeStateSerializer(ModelSerializer):
