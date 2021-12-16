@@ -18,12 +18,14 @@ class Ticket(models.Model):
     ON_REVISION = 2
     ON_HOLD = 3
     CLOSED = 4
+    DELETED = 5
     STATES = (
         (NEW, "Nuevo"),
         (IN_PROGRESS, "En progreso"),
         (ON_REVISION, "En revisión"),
         (ON_HOLD, "En espera"),
         (CLOSED, "Cerrado"),
+        (DELETED, "Eliminado"),
     )
 
     state = models.SmallIntegerField('Estado', default=NEW, choices=STATES)

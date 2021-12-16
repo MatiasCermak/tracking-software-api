@@ -10,7 +10,7 @@ class TicketModelViewsetPermissions(BasePermission):
         elif request.method == 'DELETE':
             return user.area == User.PROJECT_MANAGEMENT
         else:
-            return user.is_authenticated #IsAuthenticated.has_permission(request=request, view=view)
+            return user.is_authenticated
 
 
 class TicketChangeStateViewSetPermissions(BasePermission):
