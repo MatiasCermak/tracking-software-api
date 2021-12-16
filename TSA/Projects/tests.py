@@ -23,7 +23,7 @@ class ProjectTest(TestCase):
                                           email="pmb@pm.com",
                                           password="pmb12345",
                                           is_active=True,
-                                          area=User.PROJECT_MANAGEMENT,
+                                             area=User.PROJECT_MANAGEMENT,
                                           is_leader=False)
         self.user2.set_password('pmb12345')
         self.user2.save()

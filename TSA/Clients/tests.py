@@ -1,12 +1,31 @@
 from django.test import TestCase, Client
-import json
-from .models import Client as ClientModel, Contact
-# Create your tests here.
+from django.contrib.auth.hashers import make_password
 from django.urls import reverse
 
+from Users.models import User
+from .models import Client as ClientModel, Contact
+
+import json
 
 class ClientTest(TestCase):
     def setUp(self):
+        self.user1 = User.objects.create(username="pmbase",
+                                         email="pmb@pm.com",
+                                         password=make_password("pmb12345"),
+                                         is_staff=True,
+                                         is_active=True,
+                                         area=User.PROJECT_MANAGEMENT,
+                                         is_leader=False)
+        self.user1.save()
+        self.user2 = User.objects.create(username="usersale",
+                                         email="sale@sale.com",
+                                         password=make_password("sale1234"),
+                                         is_staff=True,
+                                         is_active=True,
+                                         area=User.SALES,
+                                         is_leader=False)
+        self.user2.save()
+
         self.browser = Client()
         self.client_test1 = ClientModel.objects.create(name='TestUser1',
                                                        address='Cordoba')
@@ -23,6 +42,10 @@ class ClientTest(TestCase):
         client2['contacts'] = []
         self.j_client1 = json.dumps(client1)
         self.j_client2 = json.dumps(client2)
+
+        response = self.browser.post(reverse('token_obtain_pair'), {'email': 'sale@sale.com', 'password': 'sale1234'})
+        rj = json.loads(response.content)
+        self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(rj.get('access'))
 
     def test_create_client(self):
         client = dict(name='TestUser3',
@@ -59,11 +82,36 @@ class ClientTest(TestCase):
         response = self.browser.delete(reverse('clients-detail', args=[self.client_test1.id]))
         self.assertEqual(response.status_code, 204)
 
+    def test_unauthorized_client(self):
+        response = self.browser.post(reverse('token_obtain_pair'), {'email': 'pmb@pm.com', 'password': 'pmb12345'})
+        rj = json.loads(response.content)
+        self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(rj.get('access'))
+
+        response = self.browser.delete(reverse('clients-detail', args=[self.client_test2.id]))
+        self.assertEqual(response.status_code, 403)
 
 class ContactTest(TestCase):
     def setUp(self):
         self.maxDiff = None
         self.browser = Client()
+
+        self.user1 = User.objects.create(username="pmbase",
+                                         email="pmb@pm.com",
+                                         password=make_password("pmb12345"),
+                                         is_staff=True,
+                                         is_active=True,
+                                         area=User.PROJECT_MANAGEMENT,
+                                         is_leader=False)
+        self.user1.save()
+        self.user2 = User.objects.create(username="usersale",
+                                         email="sale@sale.com",
+                                         password=make_password("sale1234"),
+                                         is_staff=True,
+                                         is_active=True,
+                                         area=User.SALES,
+                                         is_leader=False)
+        self.user2.save()
+
         self.client_test1 = ClientModel.objects.create(name='TestUser1',
                                                        address='Cordoba')
         self.client_test1.save()
@@ -106,6 +154,10 @@ class ContactTest(TestCase):
         self.j_contact1 = json.dumps(contact1)
         self.j_contact2 = json.dumps(contact2)
         self.j_contact3 = json.dumps(contact3)
+
+        response = self.browser.post(reverse('token_obtain_pair'), {'email': 'sale@sale.com', 'password': 'sale1234'})
+        rj = json.loads(response.content)
+        self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(rj.get('access'))
 
     def test_create_contact(self):
         contact_test3 = dict(client=self.client_test1.id,
@@ -155,3 +207,10 @@ class ContactTest(TestCase):
         response = self.browser.delete(reverse('contacts-detail', args=[self.contact_test1.id]))
         self.assertEqual(response.status_code, 204)
 
+    def test_unauthorized_contact(self):
+        response = self.browser.post(reverse('token_obtain_pair'), {'email': 'pmb@pm.com', 'password': 'pmb12345'})
+        rj = json.loads(response.content)
+        self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(rj.get('access'))
+
+        response = self.browser.delete(reverse('clients-detail', args=[self.client_test2.id]))
+        self.assertEqual(response.status_code, 403)
