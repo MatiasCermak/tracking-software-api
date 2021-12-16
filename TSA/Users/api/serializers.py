@@ -37,3 +37,10 @@ class UserChangePasswordSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ['password']
+
+
+class UserChangeLeaderSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['is_leader']
