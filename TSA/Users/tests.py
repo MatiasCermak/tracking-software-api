@@ -36,6 +36,7 @@ class UserTest(TestCase):
     def test_api_list_users(self):
         response = self.browser.get(reverse("users-list"))
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 2)
 
     def test_api_add_user(self):
         user = dict(username='tom',
@@ -95,6 +96,10 @@ class UserNotLeaderTest(TestCase):
         rj = json.loads(response.content)
         self.browser.defaults['HTTP_AUTHORIZATION'] = 'Bearer {}'.format(
             rj.get('access'))
+
+    def test_api_list_users(self):
+        response = self.browser.get(reverse("users-list"))
+        self.assertEqual(response.status_code, 403)
 
     def test_api_add_user(self):
         user = dict(username='tom',
